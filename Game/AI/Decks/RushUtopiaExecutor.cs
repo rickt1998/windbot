@@ -113,7 +113,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.AchachaCatcher,
                 CardId.GagagaOutfielder,
                 CardId.ZubabaBatter,
-                CardId.DododoSecond,
+                CardId.DododoSecond
             };
 
             if (Card.IsCode(CardId.BaseballDragon) || Card.IsCode(CardId.BaseballKing))
@@ -147,7 +147,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.FireGuardian,
                 CardId.ZubabaBatter,
                 CardId.AchachaCatcher,
-                CardId.GagagaOutfielder,
+                CardId.GagagaOutfielder
             };
 
 
@@ -161,7 +161,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.FireGuardian,
                 CardId.ZubabaBatter,
                 CardId.AchachaCatcher,
-                CardId.GagagaOutfielder,
+                CardId.GagagaOutfielder
             };
 
             AI.SelectCard(gytargets);
@@ -186,7 +186,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.PhoenixDragon,
                 CardId.ZubabaBatter,
                 CardId.AchachaCatcher,
-                CardId.GagagaOutfielder,
+                CardId.GagagaOutfielder
             };
 
             AI.SelectCard(gytargets);
@@ -202,7 +202,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.GogogoUmpire,
                 CardId.GagagaOutfielder,
                 CardId.AchachaCatcher,
-                CardId.ZubabaBatter,
+                CardId.ZubabaBatter
             };
 
             AI.SelectCard(targets);
