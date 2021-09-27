@@ -73,7 +73,7 @@ namespace WindBot.Game.AI.Decks
             // Utopic Dragon
             // Recycle monsters + SS Utopia
             AddExecutor(ExecutorType.Summon, CardId.BaseballDragon, Tribute);
-            AddExecutor(ExecutorType.Activate, CardId.BaseballDragon);
+            AddExecutor(ExecutorType.Activate, CardId.BaseballDragon, BaseballDragonEff);
 
             // Big number
             AddExecutor(ExecutorType.Summon, CardId.FireGuardian, Tribute);
@@ -218,6 +218,31 @@ namespace WindBot.Game.AI.Decks
             };
 
             AI.SelectCard(targets);
+            return true;
+        }
+
+        private bool BaseballDragonEff()
+        {
+            if (!Bot.HasInGraveyard(CardId.BaseballKing))
+            {
+                return false;
+            }
+            int[] targets = {
+                CardId.BaseballDragon,
+                CardId.DododoSecond,
+                CardId.BaseballKing,
+                CardId.GogogoUmpire,
+                CardId.TerrorsaurSternptera,
+                CardId.PhoenixDragon,
+                CardId.FireGuardian,
+                CardId.ZubabaBatter,
+                CardId.AchachaCatcher,
+                CardId.GagagaOutfielder,
+            };
+
+            AI.SelectCard(targets);
+            AI.SelectNextCard(targets);
+            AI.SelectThirdCard(targets);
             return true;
         }
     }
