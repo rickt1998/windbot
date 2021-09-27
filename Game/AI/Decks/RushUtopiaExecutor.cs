@@ -170,6 +170,11 @@ namespace WindBot.Game.AI.Decks
 
         private bool DododoEff()
         {
+            if (!Bot.HasInHand(CardId.BaseballKing) && !Bot.HasInHand(CardId.BaseballDragon))
+            {
+                return false;
+            }
+
             DododoEffActivated = true;
             return true;
         }
