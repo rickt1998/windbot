@@ -22,7 +22,7 @@ namespace WindBot.Game.AI.Decks
             public const int TerrorsaurSternptera = 120151011;
             public const int PhoenixDragon = 120110009;
             public const int TensionMax = 120150007;
-            public const int HammerCrush = 120103032;
+            public const int HammerCrush = 120120041;
             public const int MonsterReborn = 120194004;
             public const int SpiritsStadium = 120199047;
             public const int DeadlyDuel = 120183060;
