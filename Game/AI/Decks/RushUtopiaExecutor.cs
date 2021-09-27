@@ -6,7 +6,7 @@ using WindBot.Game.AI;
 
 namespace WindBot.Game.AI.Decks
 {
-    [Deck("Rush Utopia", "AI_RushUtopia")]
+    [Deck("RushUtopia", "AI_RushUtopia")]
     public class RushUtopiaExecutor : DefaultExecutor
     {
         public class CardId
