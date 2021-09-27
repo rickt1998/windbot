@@ -22,7 +22,7 @@ namespace WindBot.Game.AI.Decks
             public const int TerrorsaurSternptera = 120151011;
             public const int PhoenixDragon = 120110009;
             public const int TensionMax = 120150007;
-            public const int HammerCrush = 120151032;
+            public const int HammerCrush = 120103032;
             public const int MonsterReborn = 120194004;
             public const int SpiritsStadium = 120199047;
             public const int DeadlyDuel = 120183060;
@@ -38,7 +38,7 @@ namespace WindBot.Game.AI.Decks
 
             AddExecutor(ExecutorType.Activate, CardId.HammerCrush);
 
-            AddExecutor(ExecutorType.Activate, CardId.MonsterReborn);
+            AddExecutor(ExecutorType.Activate, CardId.MonsterReborn, MonsterRebornEff);
 
             // Dododo Second
             // Treat as two tributes for Utopia / Dragon
