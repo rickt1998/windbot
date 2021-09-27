@@ -43,7 +43,7 @@ namespace WindBot.Game.AI.Decks
             // Dododo Second
             // Treat as two tributes for Utopia / Dragon
             AddExecutor(ExecutorType.Summon, CardId.DododoSecond);
-            AddExecutor(ExecutorType.Activate, CardId.DododoSecond);
+            AddExecutor(ExecutorType.Activate, CardId.DododoSecond, DododoEff);
 
             // Gogogo Umpire
             // Recycle Field Spell
@@ -58,12 +58,12 @@ namespace WindBot.Game.AI.Decks
             // Phoenix Dragon
             // Recycle high level dragon
             AddExecutor(ExecutorType.Summon, CardId.PhoenixDragon);
-            AddExecutor(ExecutorType.Activate, CardId.PhoenixDragon);
+            AddExecutor(ExecutorType.Activate, CardId.PhoenixDragon, PhoenixEff);
 
-            // Normal Monsters
+            // Normal Monsters in order of ATK value
+            AddExecutor(ExecutorType.Summon, CardId.ZubabaBatter);
             AddExecutor(ExecutorType.Summon, CardId.AchachaCatcher);
             AddExecutor(ExecutorType.Summon, CardId.GagagaOutfielder);
-            AddExecutor(ExecutorType.Summon, CardId.ZubabaBatter);
 
             // Utopia
             // Send 2 Monsters to GY to gain ATK 
@@ -86,22 +86,20 @@ namespace WindBot.Game.AI.Decks
             AddExecutor(ExecutorType.Activate, CardId.Request9);
             AddExecutor(ExecutorType.Activate, CardId.TrumpetToMarch);
 
-            // Set Normal Spell
+            // Set Spells/Traps to maximise advantage next turn
             AddExecutor(ExecutorType.SpellSet, CardId.MonsterReborn);
             AddExecutor(ExecutorType.SpellSet, CardId.HammerCrush);
             AddExecutor(ExecutorType.SpellSet, CardId.TensionMax);
-
-            // Set Normal Trap
             AddExecutor(ExecutorType.SpellSet, CardId.DeadlyDuel);
             AddExecutor(ExecutorType.SpellSet, CardId.Request9);
             AddExecutor(ExecutorType.SpellSet, CardId.TrumpetToMarch);
         }
 
-        public bool DododoSecondEffect = false;
+        public bool DododoEffActivated = false;
 
         public override void OnNewTurn()
         {
-            DododoSecondEffect = false;
+            DododoEffActivated = false;
             base.OnNewTurn();
         }
 
@@ -109,18 +107,18 @@ namespace WindBot.Game.AI.Decks
         private bool Tribute()
         {
             int[] lowLevel = {
+                CardId.PhoenixDragon,
+                CardId.TerrorsaurSternptera,
+                CardId.GogogoUmpire,
                 CardId.AchachaCatcher,
                 CardId.GagagaOutfielder,
                 CardId.ZubabaBatter,
-                CardId.GogogoUmpire,
-                CardId.TerrorsaurSternptera,
-                CardId.PhoenixDragon,
                 CardId.DododoSecond,
             };
 
             if (Card.IsCode(CardId.BaseballDragon) || Card.IsCode(CardId.BaseballKing))
             {
-                if (Bot.HasInMonstersZone(CardId.DododoSecond, faceUp: true) && DododoSecondEffect)
+                if (Bot.HasInMonstersZone(CardId.DododoSecond, faceUp: true) && DododoEffActivated)
                 {
                     AI.SelectCard(CardId.DododoSecond);
                     AI.SelectYesNo(true);
@@ -170,6 +168,12 @@ namespace WindBot.Game.AI.Decks
             return true;
         }
 
+        private bool DododoEff()
+        {
+            DododoEffActivated = true;
+            return true;
+        }
+
         private bool MonsterRebornEff()
         {
             int[] gytargets = {
@@ -203,6 +207,17 @@ namespace WindBot.Game.AI.Decks
 
             AI.SelectCard(targets);
             AI.SelectNextCard(targets);
+            return true;
+        }
+
+        private bool PhoenixEff()
+        {
+            int[] targets = {
+                CardId.BaseballDragon,
+                CardId.FireGuardian
+            };
+
+            AI.SelectCard(targets);
             return true;
         }
     }
