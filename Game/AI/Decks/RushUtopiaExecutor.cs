@@ -35,9 +35,7 @@ namespace WindBot.Game.AI.Decks
         {
             // Field Spell
             AddExecutor(ExecutorType.Activate, CardId.SpiritsStadium);
-
             AddExecutor(ExecutorType.Activate, CardId.HammerCrush);
-
             AddExecutor(ExecutorType.Activate, CardId.MonsterReborn, MonsterRebornEff);
 
             // Dododo Second
@@ -150,7 +148,6 @@ namespace WindBot.Game.AI.Decks
                 CardId.GagagaOutfielder
             };
 
-
             AI.SelectCard(targets);
             return true;
         }
@@ -242,7 +239,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.FireGuardian,
                 CardId.ZubabaBatter,
                 CardId.AchachaCatcher,
-                CardId.GagagaOutfielder,
+                CardId.GagagaOutfielder
             };
 
             AI.SelectCard(targets);
