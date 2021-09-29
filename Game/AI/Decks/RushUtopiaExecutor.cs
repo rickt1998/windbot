@@ -122,25 +122,29 @@ namespace WindBot.Game.AI.Decks
                 {
                     AI.SelectCard(CardId.DododoSecond);
                     AI.SelectYesNo(true);
-                    return true;
                 }
                 else
                 {
                     AI.SelectCard(lowLevel);
                     AI.SelectNextCard(lowLevel);
-                    return true;
                 }
             }
             else // It's Fire Guardian
             {
                 AI.SelectCard(lowLevel);
-                return true;
             }
+
+            return true;
         }
 
         // Only use on targets that are suitable
         private bool TensionMax()
         {
+            if (Util.IsTurn1OrMain2())
+            {
+                return false;
+            }
+
             int[] targets = {
                 CardId.BaseballDragon,
                 CardId.BaseballKing,
@@ -152,6 +156,7 @@ namespace WindBot.Game.AI.Decks
 
 
             AI.SelectCard(targets);
+
             return true;
         }
 
@@ -165,17 +170,17 @@ namespace WindBot.Game.AI.Decks
             };
 
             AI.SelectCard(gytargets);
+
             return true;
         }
 
         private bool DododoEff()
         {
             if (!Bot.HasInHand(CardId.BaseballKing) && !Bot.HasInHand(CardId.BaseballDragon))
-            {
                 return false;
-            }
 
             DododoEffActivated = true;
+
             return true;
         }
 
@@ -195,6 +200,7 @@ namespace WindBot.Game.AI.Decks
             };
 
             AI.SelectCard(gytargets);
+
             return true;
         }
 
@@ -212,6 +218,7 @@ namespace WindBot.Game.AI.Decks
 
             AI.SelectCard(targets);
             AI.SelectNextCard(targets);
+
             return true;
         }
 
@@ -223,15 +230,15 @@ namespace WindBot.Game.AI.Decks
             };
 
             AI.SelectCard(targets);
+
             return true;
         }
 
         private bool BaseballDragonEff()
         {
             if (!Bot.HasInGraveyard(CardId.BaseballKing))
-            {
                 return false;
-            }
+
             int[] targets = {
                 CardId.BaseballDragon,
                 CardId.DododoSecond,
@@ -248,6 +255,7 @@ namespace WindBot.Game.AI.Decks
             AI.SelectCard(targets);
             AI.SelectNextCard(targets);
             AI.SelectThirdCard(targets);
+
             return true;
         }
     }
