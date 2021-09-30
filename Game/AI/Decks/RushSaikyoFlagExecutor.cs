@@ -33,28 +33,28 @@ namespace WindBot.Game.AI.Decks
             : base(ai, duel)
         {
             AddExecutor(ExecutorType.Activate, CardId.IronOnslaught);
-            AddExecutor(ExecutorType.Summon, CardId.BullBreaker);
-            AddExecutor(ExecutorType.Summon, CardId.CyberFalcon);
-            AddExecutor(ExecutorType.Summon, CardId.AvanWolf);
-            AddExecutor(ExecutorType.Summon, CardId.BrandNew);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.BullBreaker);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.CyberFalcon);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.AvanWolf);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.BrandNew);
 
-            AddExecutor(ExecutorType.Summon, CardId.AssaultArmored);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.AssaultArmored);
             AddExecutor(ExecutorType.Activate, CardId.AssaultArmored, AssaultArmoredEff);
 
-            AddExecutor(ExecutorType.Summon, CardId.CrafterDrone);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.CrafterDrone);
             AddExecutor(ExecutorType.Activate, CardId.CrafterDrone, CrafterDroneEff);
 
-            AddExecutor(ExecutorType.Summon, CardId.SurgeBicorn);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.SurgeBicorn);
             AddExecutor(ExecutorType.Activate, CardId.SurgeBicorn, SurgeBicornEff);
+
+            AddExecutor(ExecutorType.SummonOrSet, CardId.AimEagle);
+            AddExecutor(ExecutorType.Activate, CardId.AimEagle, AimEagleEff);
 
             AddExecutor(ExecutorType.Summon, CardId.AceBreaker, Tribute);
             AddExecutor(ExecutorType.Activate, CardId.AceBreaker, AceBreakerEff);
 
             AddExecutor(ExecutorType.Summon, CardId.MirrorInnovator, Tribute);
             AddExecutor(ExecutorType.Activate, CardId.MirrorInnovator, MirrorInnovatorEff);
-
-            AddExecutor(ExecutorType.Summon, CardId.AimEagle);
-            AddExecutor(ExecutorType.Activate, CardId.AimEagle, AimEagleEff);
 
             AddExecutor(ExecutorType.Activate, CardId.TensionMax, TensionMaxEff);
             AddExecutor(ExecutorType.Activate, CardId.BattleDemotion);
@@ -98,7 +98,20 @@ namespace WindBot.Game.AI.Decks
         private bool TensionMaxEff()
         {
             if (Util.IsTurn1OrMain2())
+                return false;
+
+            // If all enemy monsters are better, test for each player monster if it would be able to hit over
+            if (Util.IsAllEnemyBetter())
             {
+                foreach (ClientCard mymonster in Bot.GetMonsters())
+                {
+                    if (mymonster.Attack + 400 > Util.GetBestEnemyCard().Attack)
+                    {
+                        AI.SelectCard(mymonster);
+                        return true;
+                    }
+                }
+
                 return false;
             }
 
@@ -179,6 +192,9 @@ namespace WindBot.Game.AI.Decks
 
         private bool MirrorInnovatorEff()
         {
+            if (Util.IsTurn1OrMain2())
+                return false;
+
             int[] gytargets = {
                 CardId.AceBreaker,
                 CardId.MirrorInnovator,

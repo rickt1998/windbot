@@ -42,28 +42,28 @@ namespace WindBot.Game.AI.Decks
 
             // Dododo Second
             // Treat as two tributes for Utopia / Dragon
-            AddExecutor(ExecutorType.Summon, CardId.DododoSecond);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.DododoSecond);
             AddExecutor(ExecutorType.Activate, CardId.DododoSecond, DododoEff);
 
             // Gogogo Umpire
             // Recycle Field Spell
-            AddExecutor(ExecutorType.Summon, CardId.GogogoUmpire);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.GogogoUmpire);
             AddExecutor(ExecutorType.Activate, CardId.GogogoUmpire, GogogoEff);
 
             // Terrorsaur Sternptera
             // Forceful Sentry go brr
-            AddExecutor(ExecutorType.Summon, CardId.TerrorsaurSternptera);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.TerrorsaurSternptera);
             AddExecutor(ExecutorType.Activate, CardId.TerrorsaurSternptera);
 
             // Phoenix Dragon
             // Recycle high level dragon
-            AddExecutor(ExecutorType.Summon, CardId.PhoenixDragon);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.PhoenixDragon);
             AddExecutor(ExecutorType.Activate, CardId.PhoenixDragon, PhoenixEff);
 
             // Normal Monsters in order of ATK value
-            AddExecutor(ExecutorType.Summon, CardId.ZubabaBatter);
-            AddExecutor(ExecutorType.Summon, CardId.AchachaCatcher);
-            AddExecutor(ExecutorType.Summon, CardId.GagagaOutfielder);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.ZubabaBatter);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.AchachaCatcher);
+            AddExecutor(ExecutorType.SummonOrSet, CardId.GagagaOutfielder);
 
             // Utopia
             // Send 2 Monsters to GY to gain ATK 
@@ -141,7 +141,20 @@ namespace WindBot.Game.AI.Decks
         private bool TensionMax()
         {
             if (Util.IsTurn1OrMain2())
+                return false;
+
+            // If all enemy monsters are better, test for each player monster if it would be able to hit over
+            if (Util.IsAllEnemyBetter())
             {
+                foreach (ClientCard mymonster in Bot.GetMonsters())
+                {
+                    if (mymonster.Attack + 400 > Util.GetBestEnemyCard().Attack)
+                    {
+                        AI.SelectCard(mymonster);
+                        return true;
+                    }
+                }
+
                 return false;
             }
 
@@ -153,7 +166,6 @@ namespace WindBot.Game.AI.Decks
                 CardId.AchachaCatcher,
                 CardId.GagagaOutfielder
             };
-
 
             AI.SelectCard(targets);
 
@@ -206,6 +218,9 @@ namespace WindBot.Game.AI.Decks
 
         private bool BaseballKingEff()
         {
+            if (Util.IsTurn1OrMain2())
+                return false;
+
             int[] targets = {
                 CardId.DododoSecond,
                 CardId.PhoenixDragon,
