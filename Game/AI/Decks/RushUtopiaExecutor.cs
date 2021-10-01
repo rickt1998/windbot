@@ -87,12 +87,7 @@ namespace WindBot.Game.AI.Decks
             AddExecutor(ExecutorType.Activate, CardId.TrumpetToMarch);
 
             // Set Spells/Traps to maximise advantage next turn
-            AddExecutor(ExecutorType.SpellSet, CardId.MonsterReborn);
-            AddExecutor(ExecutorType.SpellSet, CardId.HammerCrush);
-            AddExecutor(ExecutorType.SpellSet, CardId.TensionMax);
-            AddExecutor(ExecutorType.SpellSet, CardId.DeadlyDuel);
-            AddExecutor(ExecutorType.SpellSet, CardId.Request9);
-            AddExecutor(ExecutorType.SpellSet, CardId.TrumpetToMarch);
+            AddExecutor(ExecutorType.SpellSet);
         }
 
         public bool DododoEffActivated = false;
@@ -118,20 +113,22 @@ namespace WindBot.Game.AI.Decks
 
             if (Card.IsCode(CardId.BaseballDragon) || Card.IsCode(CardId.BaseballKing))
             {
-                if (Bot.HasInMonstersZone(CardId.DododoSecond, faceUp: true) && DododoEffActivated)
+                if (Bot.HasInMonstersZone(CardId.DododoSecond) && DododoEffActivated)
                 {
-                    AI.SelectCard(CardId.DododoSecond);
+                    // Summon with effect of Dododo Second
+                    AI.SelectMaterials(CardId.DododoSecond);
                     AI.SelectYesNo(true);
+                    DododoEffActivated = false;
                 }
                 else
                 {
-                    AI.SelectCard(lowLevel);
-                    AI.SelectNextCard(lowLevel);
+                    AI.SelectMaterials(lowLevel);
+                    AI.SelectMaterials(lowLevel);
                 }
             }
             else // It's Fire Guardian
             {
-                AI.SelectCard(lowLevel);
+                AI.SelectMaterials(lowLevel);
             }
 
             return true;
@@ -188,6 +185,10 @@ namespace WindBot.Game.AI.Decks
 
         private bool DododoEff()
         {
+            // Don't activate it if it's already activated
+            if (DododoEffActivated)
+                return false;
+
             if (!Bot.HasInHand(CardId.BaseballKing) && !Bot.HasInHand(CardId.BaseballDragon))
                 return false;
 

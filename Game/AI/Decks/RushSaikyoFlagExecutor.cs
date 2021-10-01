@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using WindBot;
 using WindBot.Game;
 using WindBot.Game.AI;
-using System;
 
 namespace WindBot.Game.AI.Decks
 {
@@ -60,15 +59,17 @@ namespace WindBot.Game.AI.Decks
             AddExecutor(ExecutorType.Activate, CardId.BattleDemotion);
             AddExecutor(ExecutorType.Activate, CardId.FistOfTheBeast);
 
-            // Set traps
-            AddExecutor(ExecutorType.SpellSet, CardId.IronOnslaught);
-            AddExecutor(ExecutorType.SpellSet, CardId.BattleDemotion);
-            AddExecutor(ExecutorType.SpellSet, CardId.TensionMax);
-            AddExecutor(ExecutorType.SpellSet, CardId.GracefulCharity);
-            AddExecutor(ExecutorType.SpellSet, CardId.FistOfTheBeast);
+            // Set spells/traps
+            AddExecutor(ExecutorType.SpellSet);
         }
 
         public bool SurgeBicornEffActivated = false;
+
+        public override void OnNewTurn()
+        {
+            SurgeBicornEffActivated = false;
+            base.OnNewTurn();
+        }
 
         private bool Tribute()
         {
@@ -82,15 +83,17 @@ namespace WindBot.Game.AI.Decks
                 CardId.AssaultArmored
             };
 
-            if (Bot.HasInMonstersZone(CardId.SurgeBicorn, faceUp: true) && SurgeBicornEffActivated)
+            if (Bot.HasInMonstersZone(CardId.SurgeBicorn) && SurgeBicornEffActivated)
             {
-                AI.SelectCard(CardId.SurgeBicorn);
+                // Summon with effect of Surge Bicorn
+                AI.SelectMaterials(CardId.SurgeBicorn);
                 AI.SelectYesNo(true);
+                SurgeBicornEffActivated = false;
             }
             else
             {
-                AI.SelectCard(lowLevel);
-                AI.SelectNextCard(lowLevel);
+                AI.SelectMaterials(lowLevel);
+                AI.SelectMaterials(lowLevel);
             }
             return true;
         }
@@ -167,6 +170,10 @@ namespace WindBot.Game.AI.Decks
 
         private bool SurgeBicornEff()
         {
+            // Don't activate it if it's already activated
+            if (SurgeBicornEffActivated)
+                return false;
+
             if (!Bot.HasInHand(CardId.AceBreaker) && !Bot.HasInHand(CardId.MirrorInnovator))
                 return false;
 
@@ -185,7 +192,6 @@ namespace WindBot.Game.AI.Decks
             AI.SelectThirdCard(gytargets);
 
             SurgeBicornEffActivated = true;
-            Console.WriteLine("Surge Bicorn Eff Activated");
 
             return true;
         }
@@ -207,21 +213,13 @@ namespace WindBot.Game.AI.Decks
                 CardId.AimEagle
             };
 
-            // TODO: stop being lazy and fix this
-            if (Enemy.HasDefendingMonster()) // Send one => piercing damage
-            {
+            int gymonstercount = Bot.Graveyard.GetMonsters().Count;
+            if (gymonstercount >= 1)
                 AI.SelectCard(gytargets);
-            }
-            else // Send up to three => bigger number
-            {
-                int gymonstercount = Bot.Graveyard.GetMonsters().Count;
-                if (gymonstercount >= 1)
-                    AI.SelectCard(gytargets);
-                if (gymonstercount >= 2)
-                    AI.SelectNextCard(gytargets);
-                if (gymonstercount >= 3)
-                    AI.SelectThirdCard(gytargets);
-            }
+            if (gymonstercount >= 2)
+                AI.SelectNextCard(gytargets);
+            if (gymonstercount >= 3)
+                AI.SelectThirdCard(gytargets);
 
             return true;
         }
