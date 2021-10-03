@@ -36,6 +36,7 @@ namespace WindBot.Game.AI.Decks
         public RushPsychicExecutor(GameAI ai, Duel duel) :
             base(ai, duel)
         {
+            // Activate multiples of blue/red medicine
             for (int i = 0; i < 3; i++)
                 AddExecutor(ExecutorType.Activate, CardId.BlueMedicine);
 
@@ -52,16 +53,18 @@ namespace WindBot.Game.AI.Decks
 
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
 
-            AddExecutor(ExecutorType.Summon, CardId.CAND);
-
             AddExecutor(ExecutorType.Summon, CardId.Psyphickupper);
             AddExecutor(ExecutorType.Activate, CardId.Psyphickupper);
+
+            // if (Bot.HasInMonstersZone(CardId.Psyphickupper, faceUp: true) && Bot.HasInHand(CardId.Fusion))
+            AddExecutor(ExecutorType.Summon, CardId.CAND);
 
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
 
             AddExecutor(ExecutorType.Summon, CardId.AmusiPerformer);
             AddExecutor(ExecutorType.Activate, CardId.AmusiPerformer);
 
+            // if (Bot.HasInMonstersZone(CardId.Psyphickupper, faceUp: true) && Bot.HasInHand(CardId.Fusion))
             AddExecutor(ExecutorType.Summon, CardId.HowlingBird);
 
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
@@ -69,11 +72,14 @@ namespace WindBot.Game.AI.Decks
             AddExecutor(ExecutorType.Summon, CardId.RomancePick);
             AddExecutor(ExecutorType.Activate, CardId.RomancePick, RomancePickEff);
 
-            AddExecutor(ExecutorType.Summon, CardId.EsperaidtheSmashingSuperstar);
+            AddExecutor(ExecutorType.Summon, CardId.EsperaidtheSmashingSuperstar, Tribute);
             AddExecutor(ExecutorType.Activate, CardId.EsperaidtheSmashingSuperstar);
 
-            AddExecutor(ExecutorType.Summon, CardId.Giftarist);
+            AddExecutor(ExecutorType.Summon, CardId.Giftarist, Tribute);
             AddExecutor(ExecutorType.Activate, CardId.Giftarist);
+
+            AddExecutor(ExecutorType.Summon, CardId.PrimaGuitarnatheShiningSuperstar, Tribute);
+            AddExecutor(ExecutorType.Activate, CardId.PrimaGuitarnatheShiningSuperstar);
 
             AddExecutor(ExecutorType.Activate, CardId.MonsterReborn, MonsterRebornEff);
 
@@ -84,10 +90,29 @@ namespace WindBot.Game.AI.Decks
 
         private bool Tribute()
         {
-            List<CardId> lowlevel = new List<CardId>
+            int[] lowlevel =
             {
-
+                CardId.ChemicalCureBlue,
+                CardId.ChemicalCureRed,
+                CardId.Psyphickupper,
+                CardId.EsperaidtheSmashingSuperstar,
+                CardId.Giftarist,
+                CardId.AmusiPerformer,
+                CardId.RomancePick,
+                CardId.CAND,
+                CardId.HowlingBird
             };
+
+            if (Card.IsCode(CardId.Psyphickupper))
+            {
+                AI.SelectMaterials(lowlevel);
+            }
+            else
+            {
+                AI.SelectMaterials(lowlevel);
+                AI.SelectMaterials(lowlevel);
+            }
+
             return true;
         }
 
@@ -135,6 +160,7 @@ namespace WindBot.Game.AI.Decks
                 Bot.HasInMonstersZone(CardId.HowlingBird, faceUp: true))
                 AI.SelectCard(CardId.AmusiHowlingPerformer);
             else return false;
+
             return true;
         }
 
@@ -152,7 +178,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.AmusiPerformer,
                 CardId.RomancePick,
                 CardId.CAND,
-                CardId.HowlingBird,
+                CardId.HowlingBird
             };
 
             AI.SelectCard(targets);
@@ -174,7 +200,7 @@ namespace WindBot.Game.AI.Decks
                 CardId.AmusiPerformer,
                 CardId.RomancePick,
                 CardId.CAND,
-                CardId.HowlingBird,
+                CardId.HowlingBird
             };
 
             AI.SelectCard(gytargets);
