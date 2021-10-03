@@ -1,10 +1,4 @@
-
 using System.Collections.Generic;
-using System.Linq;
-using WindBot;
-using WindBot.Game;
-using WindBot.Game.AI;
-using YGOSharp.OCGWrapper.Enums;
 
 namespace WindBot.Game.AI.Decks
 {
@@ -33,6 +27,7 @@ namespace WindBot.Game.AI.Decks
             public const int RomancePick = 120130023;
             public const int StarRestart = 120196045;
         }
+
         public RushPsychicExecutor(GameAI ai, Duel duel) :
             base(ai, duel)
         {
@@ -47,30 +42,25 @@ namespace WindBot.Game.AI.Decks
 
             AddExecutor(ExecutorType.Summon, CardId.ChemicalCureBlue);
             AddExecutor(ExecutorType.Activate, CardId.ChemicalCureBlue, ChemicalCureBlueEff);
-
             AddExecutor(ExecutorType.Summon, CardId.ChemicalCureRed);
             AddExecutor(ExecutorType.Activate, CardId.ChemicalCureRed, ChemicalCureRedEff);
-
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
 
             AddExecutor(ExecutorType.Summon, CardId.Psyphickupper);
             AddExecutor(ExecutorType.Activate, CardId.Psyphickupper);
-
-            // if (Bot.HasInMonstersZone(CardId.Psyphickupper, faceUp: true) && Bot.HasInHand(CardId.Fusion))
-            AddExecutor(ExecutorType.Summon, CardId.CAND);
-
+            AddExecutor(ExecutorType.Summon, CardId.CAND, CANDSummon);
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
 
             AddExecutor(ExecutorType.Summon, CardId.AmusiPerformer);
             AddExecutor(ExecutorType.Activate, CardId.AmusiPerformer);
-
-            // if (Bot.HasInMonstersZone(CardId.Psyphickupper, faceUp: true) && Bot.HasInHand(CardId.Fusion))
-            AddExecutor(ExecutorType.Summon, CardId.HowlingBird);
-
+            AddExecutor(ExecutorType.Summon, CardId.HowlingBird, HowlingBirdSummon);
             AddExecutor(ExecutorType.Activate, CardId.Fusion, FusionEff);
 
             AddExecutor(ExecutorType.Summon, CardId.RomancePick);
             AddExecutor(ExecutorType.Activate, CardId.RomancePick, RomancePickEff);
+
+            AddExecutor(ExecutorType.Summon, CardId.CAND);
+            AddExecutor(ExecutorType.Summon, CardId.AmusiPerformer);
 
             AddExecutor(ExecutorType.Summon, CardId.EsperaidtheSmashingSuperstar, Tribute);
             AddExecutor(ExecutorType.Activate, CardId.EsperaidtheSmashingSuperstar);
@@ -105,15 +95,25 @@ namespace WindBot.Game.AI.Decks
 
             if (Card.IsCode(CardId.Psyphickupper))
             {
-                AI.SelectMaterials(lowlevel);
+                AI.SelectCard(lowlevel);
             }
             else
             {
-                AI.SelectMaterials(lowlevel);
-                AI.SelectMaterials(lowlevel);
+                AI.SelectCard(lowlevel);
+                AI.SelectNextCard(lowlevel);
             }
 
             return true;
+        }
+
+        private bool CANDSummon()
+        {
+            return Bot.HasInMonstersZone(CardId.Psyphickupper, faceUp: true) && Bot.HasInHand(CardId.Fusion);
+        }
+
+        private bool HowlingBirdSummon()
+        {
+            return Bot.HasInMonstersZone(CardId.AmusiPerformer, faceUp: true) && Bot.HasInHand(CardId.Fusion);
         }
 
         private bool ChemicalCureBlueEff()
@@ -212,11 +212,11 @@ namespace WindBot.Game.AI.Decks
         {
             int[] normal = { CardId.CAND, CardId.HowlingBird };
 
-            if ((Bot.HasInGraveyard(CardId.CAND)
+            if (!((Bot.HasInGraveyard(CardId.CAND)
               || Bot.HasInGraveyard(CardId.HowlingBird))
-             && Bot.HasInGraveyard(CardId.Fusion))
+             && Bot.HasInGraveyard(CardId.Fusion)))
             {
-
+                return false;
             }
 
             // Fix such that optimal card is chosen
